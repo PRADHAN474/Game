@@ -1,0 +1,23 @@
+{
+  "name": "telegram-game-bot",
+  "description": "Telegram Game Bot",
+  "repository": "https://github.com/your-username/your-bot-repo.git",
+  "stack": "heroku-20",
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-python.git"
+    }
+  ],
+  "env": {
+    "TOKEN": "YOUR_BOT_TOKEN"
+  },
+  "scripts": {
+    "start": "python your_bot_script.py"
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
+}
