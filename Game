@@ -1,0 +1,42 @@
+import logging
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackContext, CallbackQueryHandler
+
+# Set up your bot token here
+TOKEN = "YOUR_BOT_TOKEN"
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+def start(update: Update, context: CallbackContext) -> None:
+    user = update.effective_user
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f"Hi {user.first_name}! Welcome to the game.")
+
+def play_game(update: Update, context: CallbackContext) -> None:
+    keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
+                 InlineKeyboardButton("Option 2", callback_data='2')]]
+    
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text('Choose an option:', reply_markup=reply_markup)
+
+def button_click(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    query.answer()
+    
+    if query.data == '1':
+        query.edit_message_text(text="You chose Option 1!")
+    elif query.data == '2':
+        query.edit_message_text(text="You chose Option 2!")
+
+def main() -> None:
+    updater = Updater(token=TOKEN)
+    dispatcher = updater.dispatcher
+    
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CommandHandler("play", play_game))
+    dispatcher.add_handler(CallbackQueryHandler(button_click))
+    
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
